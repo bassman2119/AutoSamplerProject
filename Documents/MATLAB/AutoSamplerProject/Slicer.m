@@ -17,7 +17,8 @@ classdef Slicer < handle
             end
             obj.NumSlice = round(nSlice);                                                       % Set internal variables to values of passed variales. Round non-integer values.
             obj.sliceCoeff = ones(obj.NumSlice,1);                                              % coefficiants can be real numbers. "obj.sliceCoeff" is a collumn vector of length "NumSlice".
-            obj.sliceShift = toCol(round(linspace(1,size(toCol(inSound),1),obj.NumSlice)));     % shift values must be whole positive numbers because they give a number of samples to shift right starting from the first sample. "obj.sliceShift" is a collumn vector of length "NumSlice".
+            temp = toCol(round(linspace(1,size(toCol(inSound),1)+1,obj.NumSlice+1)));           % shift values must be whole positive numbers because they give a number of samples to shift right starting from the first sample. "obj.sliceShift" is a collumn vector of length "NumSlice".
+            obj.sliceShift = temp(1:obj.NumSlice);
             obj.mkSlices;                                                                       % Create slices.
             obj.OutRender = zeros(size(toCol(inSound)));                                        % Initialize "outRender".
         end
@@ -32,16 +33,24 @@ classdef Slicer < handle
                 d(a(k):(a(k)+size(c(k).slice,1)-1)) =  b(k)*c(k).slice;                     % Place sequence of values in "c(i).slice" in the "OutRender" vector with the first element of "c(i).slice" being written into "OutRender(a(i))". Use a scaling factor of 
 
             end
-            obj.OutRender = d((1+abs(offset)):(size(obj.AudioIn,2)+abs(offset)));           % Cut off all elements whos index goes past the size of "OutRender" at initialisation.
-            Out = obj.OutRender;                                                            % Return "OutRender".
+            
+            if offset == 0
+                obj.OutRender = d(1:(size(obj.AudioIn,2)));       % Cut off all elements whos index goes past the size of "OutRender" at initialisation.
+                Out = obj.OutRender;                                                        % Return "OutRender".
+                return 
+            end
+            obj.OutRender = d((abs(offset)):(size(obj.AudioIn,2)+abs(offset)-1));       % Cut off all elements whos index goes past the size of "OutRender" at initialisation.
+            Out = obj.OutRender;                                                        % Return "OutRender".
+            
+            
         end
         
         function mkSlices(obj)
-                sliceSize = floor(size(obj.AudioIn,2)/obj.NumSlice);                                            % Length of one slice in samples
-                useOffset = gt(size(obj.AudioIn,2)/obj.NumSlice,floor(size(obj.AudioIn,2)/obj.NumSlice));       % If sliceSize was rounded down due to "floor" function, useOffset = 1, else useOffset = 0.   
+                sliceSize = floor(size(obj.AudioIn,2)/obj.NumSlice);                                                    % Length of one slice in samples
+                useOffset = gt(size(obj.AudioIn,2)/obj.NumSlice,floor(size(obj.AudioIn,2)/obj.NumSlice));               % If sliceSize was rounded down due to "floor" function, useOffset = 1, else useOffset = 0.   
                 for i = 1:obj.NumSlice
-                    offset = floor(i/obj.NumSlice);                                                             % If i = NumSlice, offset = 1, else offset = 0   
-                    obj.Slices(i).slice = obj.AudioIn((i-1)*sliceSize+1:(i*sliceSize+useOffset*offset));        % Create slice of length sliceSize. Add offset to length of slice only if Numslice does not divide into Size()
+                    offset = floor(i/obj.NumSlice);                                                                     % If i = NumSlice, offset = 1, else offset = 0   
+                    obj.Slices(i).slice = toCol(obj.AudioIn((i-1)*sliceSize+1:(i*sliceSize+useOffset*offset)));         % Create slice of length sliceSize. Add offset to length of slice only if Numslice does not divide into Size()
                 end
         end     
     end
