@@ -35,7 +35,7 @@ classdef Slicer < handle
             end
             
             if offset == 0
-                obj.OutRender = d(1:(size(obj.AudioIn,2)));       % Cut off all elements whos index goes past the size of "OutRender" at initialisation.
+                obj.OutRender = d(1:(size(obj.AudioIn,2)));                                 % Cut off all elements whos index goes past the size of "OutRender" at initialisation.
                 Out = obj.OutRender;                                                        % Return "OutRender".
                 return 
             end

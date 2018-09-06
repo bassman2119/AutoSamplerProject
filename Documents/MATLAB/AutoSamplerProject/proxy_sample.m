@@ -25,7 +25,7 @@ figure
 plot(Original)
 title('Original Audio')
 step = 1;                                                  % Stepsize to be used in dirfference quotient for gradient descent. "step" must be whole number.
-NumIterations = 100;
+NumIterations = 10;
 errorVec = zeros(1,NumIterations);
 figure
 
@@ -36,7 +36,7 @@ for number = 1:NumIterations
     pause(0.1)
     gradient = (abs(G.grad(getError,ceil(abs(step)),[round(S.getsliceShift);S.getsliceCoeff])));        % Calculate the gradient of the "getError" function at the point X0 = [abs(S.getsliceShift),S.getsliceCoeff]. ciel(abs(step)) ensures that the "step" value passed to G.grad is positive and a whole number.
     errorVec(number) = getError([abs(round(S.getsliceShift));S.getsliceCoeff]);
-    S.setsliceShift(S.getsliceShift-step*gradient(1:Nslice));                                           % Descend gradient for "Shift" values.
+%    S.setsliceShift(S.getsliceShift-step*gradient(1:Nslice));                                           % Descend gradient for "Shift" values.
     S.setsliceCoeff(S.getsliceCoeff-step*gradient((Nslice+1):(2*Nslice)));                              % Descend gradient for "Coeff" values.
 end
 figure
