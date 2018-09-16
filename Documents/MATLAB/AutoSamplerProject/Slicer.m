@@ -16,13 +16,13 @@ classdef Slicer < handle
                 error('The number of divisions is greater than the available number of samples.')
             end
             
-            if round(nSlice) == nslice                                                              % Only create object if nslice is a whole number
+            if round(nSlice) == nSlice                                                              % Only create object if nslice is a whole number
                obj.NumSlice = nSlice;                                                               % Set internal variables to values of passed variales. Round non-integer values.
             else
                 error('"nslice" must be a whole number.')
             end
             
-            if max(size(scInit)) == nslice                                                          % Only create object if there are enough initial coefficieants to generate sound.
+            if max(size(scInit)) == nSlice                                                          % Only create object if there are enough initial coefficieants to generate sound.
                 obj.sliceCoeff = toCol(scInit);                                                     % coefficiants can be real numbers. "obj.sliceCoeff" is a collumn vector of length "NumSlice".
             else
                 error('"scInit" must be a vector with length "nslice".')
