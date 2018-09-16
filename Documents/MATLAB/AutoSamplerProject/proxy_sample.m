@@ -11,9 +11,7 @@ clc
 
 Original = sin(linspace(0,2*pi,20));
 Sample = ones(size(Original));
-Sample(11:20) = -1;
-% Sample = Sample*0.5;
-plot(Sample)
+
 
 %-------------------Slice-------------------------------------------------%
 Nslice = 20;                                                % Number of samples to extract from "Sample". (A Sample in music production, is understood as being a snippet of sound).
